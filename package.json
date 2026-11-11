@@ -1,0 +1,47 @@
+{
+  "name": "deutschebahn-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for the Deutsche Bahn OpenBoards + OpenStation APIs: departure/arrival boards resolved by station name, no EVA numbers needed.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "deutschebahn-mcp": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janoschLC/deutschebahn_mcp.git"
+  },
+  "homepage": "https://github.com/janoschLC/deutschebahn_mcp#readme",
+  "bugs": {
+    "url": "https://github.com/janoschLC/deutschebahn_mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "deutsche-bahn",
+    "db",
+    "openboards",
+    "openstation",
+    "train",
+    "departures"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{ recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
+    "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "fast-xml-parser": "^5.12.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "^5.7.3"
+  }
+}
