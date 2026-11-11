@@ -23,6 +23,16 @@ Optional filters on the board tools: `ziel` (destination/direction, substring ma
 
 Every result carries the source attribution `Daten: DB InfraGO / Deutsche Bahn (OpenBoards API)`.
 
+## Example
+
+```
+You:    When does the next ICE leave Köln Hbf?
+Claude: The next ICE from Köln Hbf is ICE 77 at 18:50, platform 1, running on time.
+```
+
+No EVA number, no manual lookup — Claude resolves "Köln Hbf" through the `findStation`
+logic built into `getDepartureBoard` and filters the board down to ICE services for you.
+
 ## Requirements
 
 - Node.js >= 22
@@ -31,6 +41,16 @@ Every result carries the source attribution `Daten: DB InfraGO / Deutsche Bahn (
   - **OpenBoards** (departure/arrival boards)
   - **OpenStation** (station directory — needed for name resolution; without it you'd have to
     pass raw EVA numbers)
+
+### Getting DB API credentials
+
+1. Create an account at [developers.deutschebahn.com](https://developers.deutschebahn.com).
+2. Go to **Applications** → **Create new application** and give it any name.
+3. On the application page, subscribe to the **OpenBoards** product.
+4. On the same application page, also subscribe to the **OpenStation** product
+   (easy to miss — without it, station-name lookups won't work).
+5. Copy the generated **Client ID** and **Client Secret** for that application — these go into
+   `DB_OPENBOARDS_CLIENT_ID` / `DB_OPENBOARDS_CLIENT_SECRET` below.
 
 ## Install
 
@@ -61,7 +81,61 @@ primary ones.
 
 ### Add to your MCP client
 
-Example for a generic MCP-compatible client (`mcp_servers`-style config):
+Replace `/absolute/path/to/deutschebahn_mcp` with the path where you cloned this repo, and
+fill in your own credentials.
+
+**Claude Desktop** (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "deutschebahn": {
+      "command": "node",
+      "args": ["/absolute/path/to/deutschebahn_mcp/dist/index.js"],
+      "env": {
+        "DB_OPENBOARDS_CLIENT_ID": "your-client-id",
+        "DB_OPENBOARDS_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
+
+**Claude Code** (`.mcp.json` in your project, or `claude mcp add`):
+
+```json
+{
+  "mcpServers": {
+    "deutschebahn": {
+      "command": "node",
+      "args": ["/absolute/path/to/deutschebahn_mcp/dist/index.js"],
+      "env": {
+        "DB_OPENBOARDS_CLIENT_ID": "your-client-id",
+        "DB_OPENBOARDS_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
+
+**Cursor** (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "deutschebahn": {
+      "command": "node",
+      "args": ["/absolute/path/to/deutschebahn_mcp/dist/index.js"],
+      "env": {
+        "DB_OPENBOARDS_CLIENT_ID": "your-client-id",
+        "DB_OPENBOARDS_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
+
+**Generic `mcp_servers`-style config** (e.g. Hermes Agent):
 
 ```yaml
 mcp_servers:
